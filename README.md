@@ -5,6 +5,7 @@
 - ACVPs.csv: 154 ACVPs collected from ACovPepDB, PreAntiCoV  and iACVP.
 - AVPs.csv: 1248 AVPs collected from PreAntiCoV and iACVP.
 - nonAVPs.csv: 6296 non-AVPs collected from PreAntiCoV and iACVP.
+- independent_test.fasta: contains 16 ACVPs and 16 non-AVPs
 
 #### Codes and model:
 
@@ -19,3 +20,4 @@ run `python predict.py -i/--input [input_file] -o/--output [output_file]` in com
 
 - **input_file:** route to your file containing peptides to be predicted in **FASTA** format.
 - **output_file:** route to your result file containing prediction results in **CSV** format.
+- An example dataset is given in **example.fasta**
