@@ -7,6 +7,7 @@ from gensim.models import Word2Vec
 import random
 import os
 import argparse
+from tqdm import *
 
 def ACVPred(input_file, output_file):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -84,13 +85,11 @@ def ACVPred(input_file, output_file):
     for line in lines:
         if line[0] != '>':
             query_seqs.append(line)
-    for seq in query_seqs:
-        print(f'Now predicting sequence: {seq}')
+    for seq in tqdm(query_seqs):
         vec, pad = Seq_Embedding(seq)
         cf, prob = Seq_Query(vec, pad)
         cfs.append(cf.split(' ')[1])
         probs.append(prob)
-        print(f'it is {cf}, and the probability is {prob}.')
     df = pd.DataFrame()
     df['Sequence'] = pd.Series(query_seqs)
     df['Prediction'] = pd.Series(cfs)

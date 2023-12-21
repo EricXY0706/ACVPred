@@ -7,9 +7,20 @@ def set_seed(seed):
     os.environ["PYTHONHASHSEED"] = str(seed)
 def load_data(seq_type):
     seqs = list(set(pd.read_csv(rf'datasets\{seq_type}.csv')['Sequence'].tolist()))
+    if seq_type == 'nonAVPs':
+        set_seed(42)
+        seqs.sort()
+        indexes = random.sample(range(len(seqs)), 154)
+        seqs_ = []
+        for index in indexes:
+            seqs_.append(seqs[index])
+        seqs_.sort()
+        seqs = seqs_
     seqs.sort()
     return seqs
-def replacement_dictionary(seqs, p):
+def replacement_dictionary(seqs, p, seq_type):
+    if seq_type == 'nonAVPs':
+        set_seed(42)
     rep_dict = [['A', 'V'], ['S', 'T'], ['F', 'Y'], ['K', 'R'], ['C', 'M'], ['D', 'E'], ['N', 'Q'], ['V', 'I']]
     probability0 = random.random()
     seqs_plus = []
@@ -26,7 +37,9 @@ def replacement_dictionary(seqs, p):
     else:
         pass
     return seqs_plus, seqs + seqs_plus
-def replacement_alanine(seqs, p):
+def replacement_alanine(seqs, p, seq_type):
+    if seq_type == 'nonAVPs':
+        set_seed(42)
     probability0 = random.random()
     seqs_plus = []
     if probability0 > p:
@@ -41,7 +54,9 @@ def replacement_alanine(seqs, p):
     else:
         pass
     return seqs_plus, seqs + seqs_plus
-def global_random_shuffling(seqs, p):
+def global_random_shuffling(seqs, p, seq_type):
+    if seq_type == 'nonAVPs':
+        set_seed(42)
     probability0 = random.random()
     seqs_plus = []
     if probability0 > p:
@@ -53,7 +68,9 @@ def global_random_shuffling(seqs, p):
     else:
         pass
     return seqs_plus, seqs + seqs_plus
-def Local_seq_shuffling(seqs, p):
+def Local_seq_shuffling(seqs, p, seq_type):
+    if seq_type == 'nonAVPs':
+        set_seed(42)
     probability0 = random.random()
     seqs_plus = []
     if probability0 > p:
@@ -69,7 +86,9 @@ def Local_seq_shuffling(seqs, p):
     else:
         pass
     return seqs_plus, seqs + seqs_plus
-def sequence_reversion(seqs, p):
+def sequence_reversion(seqs, p, seq_type):
+    if seq_type == 'nonAVPs':
+        set_seed(42)
     probability0 = random.random()
     seqs_plus = []
     if probability0 > p:
@@ -80,7 +99,9 @@ def sequence_reversion(seqs, p):
     else:
         pass
     return seqs_plus, seqs + seqs_plus
-def subsampling(seqs, p):
+def subsampling(seqs, p, seq_type):
+    if seq_type == 'nonAVPs':
+        set_seed(42)
     probability0 = random.random()
     seqs_plus = []
     if probability0 > p:
@@ -91,19 +112,21 @@ def subsampling(seqs, p):
     else:
         pass
     return seqs_plus, seqs + seqs_plus
-def augmentation_combination(seqs, p):
-    plus, seq_1 = replacement_dictionary(seqs, p)
-    plus, seq_2 = replacement_alanine(seqs, p)
-    plus, seq_3 = global_random_shuffling(seqs, p)
-    plus, seq_4 = Local_seq_shuffling(seqs, p)
-    plus, seq_5 = sequence_reversion(seqs, p)
-    plus, seq_6 = subsampling(seqs, p)
+def augmentation_combination(seqs, p, seq_type):
+    if seq_type == 'nonAVPs':
+        set_seed(42)
+    plus, seq_1 = replacement_dictionary(seqs, p, seq_type)
+    plus, seq_2 = replacement_alanine(seqs, p, seq_type)
+    plus, seq_3 = global_random_shuffling(seqs, p, seq_type)
+    plus, seq_4 = Local_seq_shuffling(seqs, p, seq_type)
+    plus, seq_5 = sequence_reversion(seqs, p, seq_type)
+    plus, seq_6 = subsampling(seqs, p, seq_type)
     seqs = seq_1 + seq_2 + seq_3 + seq_4 + seq_5 + seq_6
     seqs = list(set(seqs))
     return seqs
 def load(p, seq_type):
     set_seed(42)
     original_seqs = load_data(seq_type)
-    augmented_seqs = augmentation_combination(original_seqs, p)
+    augmented_seqs = augmentation_combination(original_seqs, p, seq_type)
     augmented_seqs = list(set(augmented_seqs))
     return augmented_seqs
